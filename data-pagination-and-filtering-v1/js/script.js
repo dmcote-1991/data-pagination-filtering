@@ -14,7 +14,6 @@ const studentList = document.querySelector(`.student-list`);
 const linkList = document.querySelector(`.link-list`);
 const studentsPerPage = 9;
 
-
 /*
 Create the `showPage` function
 This function will create and insert/append the elements needed to display a "page" of nine students
@@ -28,8 +27,8 @@ function showPage(list, page) {
          const html = `
             <li class="student-item cf">
                <div class="student-details">
-                  <img class="avatar" src="${list[i].picture.thumbnail}" alt="Profile Picture of ${list[i].name.title} ${list[i].name.first} ${list[i].name.last}" />
-                  <h3>${list[i].name.title} ${list[i].name.first} ${list[i].name.last}</h3>
+                  <img class="avatar" src="${list[i].picture.thumbnail}" alt="Profile Picture of ${list[i].name.first} ${list[i].name.last}" />
+                  <h3>${list[i].name.first} ${list[i].name.last}</h3>
                   <span class="email">${list[i].email}</span>
                </div>
                <div class="joined-details">
@@ -49,7 +48,7 @@ This function will create and insert/append the elements needed for the paginati
 function addPagination(list) {
    const numberOfButtons = Math.ceil(list.length / studentsPerPage);
    linkList.innerHTML = ``;
-   for (let i=1; i<numberOfButtons; i++) {
+   for (let i=1; i<numberOfButtons+1; i++) {
       const html = `
          <li>
             <button type="button">${i}</button>
@@ -60,5 +59,16 @@ function addPagination(list) {
    linkList.querySelector(`button`).classList.add(`active`);
 }
 
+linkList.addEventListener(`click`, (e)=> {
+   const clickedButton = e.target.closest(`button`);
+   const activeButton = linkList.querySelector(`.active`);
+   if (clickedButton) {
+      activeButton.classList.remove(`active`);
+      clickedButton.classList.add(`active`);
+      showPage(data, clickedButton.innerHTML);
+   }
+});
 
 // Call functions
+addPagination(data);
+showPage(data, 1);
