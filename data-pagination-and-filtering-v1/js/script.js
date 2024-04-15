@@ -1,22 +1,12 @@
-/*
-Treehouse Techdegree:
-FSJS Project 2 - Data Pagination and Filtering
-*/
 
-
-
-/*
-For assistance:
-   Check out the "Project Resources" section of the Instructions tab: https://teamtreehouse.com/projects/data-pagination-and-filtering#instructions
-   Reach out in your Slack community: https://treehouse-fsjs-102.slack.com/app_redirect?channel=unit-2
-*/
 const studentList = document.querySelector(`.student-list`);
 const linkList = document.querySelector(`.link-list`);
 const studentsPerPage = 9;
 
-/*
-Create the `showPage` function
-This function will create and insert/append the elements needed to display a "page" of nine students
+/**
+	*   Renders student cards to the corresponding portion of an array of objects to the current page.
+	*   @param {variable} list - An array of objects.
+	*   @param {number} page - The page number.
 */
 function showPage(list, page) {
    const start = (page * studentsPerPage) - studentsPerPage;
@@ -41,9 +31,10 @@ function showPage(list, page) {
    }
 }
 
-/*
-Create the `addPagination` function
-This function will create and insert/append the elements needed for the pagination buttons
+/**
+	*   Determines the number of pagination buttons and renders them to the page.
+   *   Gives the "active" class to the first pagination button.
+	*   @param {variable} list - An array of objects.
 */
 function addPagination(list) {
    const numberOfButtons = Math.ceil(list.length / studentsPerPage);
@@ -59,6 +50,10 @@ function addPagination(list) {
    linkList.querySelector(`button`).classList.add(`active`);
 }
 
+/**
+	*   Provides functionality to the pagination buttons.
+	*   When a pagination button is clicked, it will take on the "active" class and display the corresponding page.
+*/
 linkList.addEventListener(`click`, (e)=> {
    const clickedButton = e.target.closest(`button`);
    const activeButton = linkList.querySelector(`.active`);
@@ -69,6 +64,5 @@ linkList.addEventListener(`click`, (e)=> {
    }
 });
 
-// Call functions
 addPagination(data);
 showPage(data, 1);
