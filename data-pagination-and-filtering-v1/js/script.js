@@ -11,7 +11,8 @@ For assistance:
    Reach out in your Slack community: https://treehouse-fsjs-102.slack.com/app_redirect?channel=unit-2
 */
 const studentList = document.querySelector(`.student-list`);
-const studentsPerPage = 9
+const linkList = document.querySelector(`.link-list`);
+const studentsPerPage = 9;
 
 
 /*
@@ -45,7 +46,19 @@ function showPage(list, page) {
 Create the `addPagination` function
 This function will create and insert/append the elements needed for the pagination buttons
 */
-
+function addPagination(list) {
+   const numberOfButtons = Math.ceil(list.length / studentsPerPage);
+   linkList.innerHTML = ``;
+   for (let i=1; i<numberOfButtons; i++) {
+      const html = `
+         <li>
+            <button type="button">${i}</button>
+         </li>
+      `;
+      linkList.insertAdjacentHTML(`beforeend`, html);
+   }
+   linkList.querySelector(`button`).classList.add(`active`);
+}
 
 
 // Call functions
