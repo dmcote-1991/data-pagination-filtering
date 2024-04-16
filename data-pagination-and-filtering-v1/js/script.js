@@ -3,7 +3,7 @@ const pageHeader = document.querySelector(`.header`);
 const studentList = document.querySelector(`.student-list`);
 const linkList = document.querySelector(`.link-list`);
 const studentsPerPage = 9;
-
+let newData = [];
 
 // Renders a search bar to the page.
 function renderSearchbar() {
@@ -24,8 +24,9 @@ const searchInput = document.getElementById(`search`);
 	*   Provides functionality to the search bar.
 	*   When a key is typed into the search bar, the page will load the student names that include the user's input and adjust the pagination buttons.
 */
+
 searchInput.addEventListener(`keyup`, ()=> {
-   const newData = [];
+   newData = [];
    const userInput = searchInput.value.toLowerCase();
    for (let i=0; i<data.length; i++) {
       const studentName = `${data[i].name.first} ${data[i].name.last}`.toLowerCase();
@@ -93,6 +94,7 @@ function addPagination(list) {
 /**
 	*   Provides functionality to the pagination buttons.
 	*   When a pagination button is clicked, it will take on the "active" class and display the corresponding page.
+   *   When there is input in the search bar, only the filtered list will be rendered.
 */
 linkList.addEventListener(`click`, (e)=> {
    const clickedButton = e.target.closest(`button`);
@@ -100,7 +102,11 @@ linkList.addEventListener(`click`, (e)=> {
    if (clickedButton) {
       activeButton.classList.remove(`active`);
       clickedButton.classList.add(`active`);
-      showPage(data, clickedButton.innerHTML);
+      if (searchInput.value !== ``) {
+         showPage(newData, parseInt(clickedButton.innerHTML));
+      } else {
+         showPage(data, parseInt(clickedButton.innerHTML));
+      }
    }
 });
 
