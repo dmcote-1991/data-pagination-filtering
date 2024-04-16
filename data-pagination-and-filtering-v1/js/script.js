@@ -4,7 +4,8 @@ const studentList = document.querySelector(`.student-list`);
 const linkList = document.querySelector(`.link-list`);
 const studentsPerPage = 9;
 
-//Search component
+
+// Renders a search bar to the page.
 function renderSearchbar() {
    const html = `
       <label for="search" class="student-search">
@@ -15,10 +16,14 @@ function renderSearchbar() {
    `;
    pageHeader.insertAdjacentHTML(`beforeend`, html);
 }
-
 renderSearchbar();
+
 const searchInput = document.getElementById(`search`);
 
+/**
+	*   Provides functionality to the search bar.
+	*   When a key is typed into the search bar, the page will load the student names that include the user's input and adjust the pagination buttons.
+*/
 searchInput.addEventListener(`keyup`, ()=> {
    const newData = [];
    const userInput = searchInput.value.toLowerCase();
@@ -38,7 +43,6 @@ searchInput.addEventListener(`keyup`, ()=> {
    }
 });
 
-
 /**
 	*   Renders student cards to the corresponding portion of an array of objects to the current page.
 	*   @param {variable} list - An array of objects.
@@ -46,7 +50,7 @@ searchInput.addEventListener(`keyup`, ()=> {
 */
 function showPage(list, page) {
    const start = (page * studentsPerPage) - studentsPerPage;
-   const end = (page * studentsPerPage) - 1
+   let end = page * studentsPerPage - 1;
    studentList.innerHTML = ``;
    for (let i=0; i<list.length; i++){
       if (i >= start && i <= end) {
