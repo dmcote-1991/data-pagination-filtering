@@ -50,7 +50,7 @@ searchInput.addEventListener(`keyup`, ()=> {
 */
 function showPage(list, page) {
    const start = (page * studentsPerPage) - studentsPerPage;
-   let end = page * studentsPerPage - 1;
+   const end = (page * studentsPerPage) - 1;
    studentList.innerHTML = ``;
    for (let i=0; i<list.length; i++){
       if (i >= start && i <= end) {
