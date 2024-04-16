@@ -1,7 +1,43 @@
 
+const pageHeader = document.querySelector(`.header`);
 const studentList = document.querySelector(`.student-list`);
 const linkList = document.querySelector(`.link-list`);
 const studentsPerPage = 9;
+
+//Search component
+function renderSearchbar() {
+   const html = `
+      <label for="search" class="student-search">
+         <span>Search by name</span>
+         <input id="search" placeholder="Search by name...">
+         <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+      </label>
+   `;
+   pageHeader.insertAdjacentHTML(`beforeend`, html);
+}
+
+renderSearchbar();
+const searchInput = document.getElementById(`search`);
+
+searchInput.addEventListener(`keyup`, ()=> {
+   const newData = [];
+   const userInput = searchInput.value.toLowerCase();
+   for (let i=0; i<data.length; i++) {
+      const studentName = `${data[i].name.first} ${data[i].name.last}`.toLowerCase();
+      if (studentName.includes(userInput)) {
+         newData.push(data[i]);
+      }
+   }
+   if(newData.length > 0) {
+      showPage(newData, 1);
+      addPagination(newData);
+   } else {
+      const html = `<h3>No results found</h3>`;
+      studentList.innerHTML = html;
+      linkList.innerHTML = ``;
+   }
+});
+
 
 /**
 	*   Renders student cards to the corresponding portion of an array of objects to the current page.
