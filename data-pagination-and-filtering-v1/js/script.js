@@ -24,7 +24,6 @@ const searchInput = document.getElementById(`search`);
 	*   Provides functionality to the search bar.
 	*   When a key is typed into the search bar, the page will load the student names that include the user's input and adjust the pagination buttons.
 */
-
 searchInput.addEventListener(`keyup`, ()=> {
    newData = [];
    const userInput = searchInput.value.toLowerCase();
