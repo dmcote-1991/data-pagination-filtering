@@ -34,8 +34,37 @@ class StudentList {
       this.data = data.map(studentData => new Student(studentData));
       this.studentsPerPage = studentsPerPage;
       this.filteredData = this.data;
+      
       this.studentListElement = document.querySelector('.student-list');
       this.linkListElement = document.querySelector('.link-list');
+
+      this.renderPaginationOptions();
+   }
+
+   // Render the dropdown for students per page
+   renderPaginationOptions() {
+      const optionsHtml = `
+         <div class="pagination-options">
+            <label for="students-per-page">Students per page:</label>
+            <select id="students-per-page">
+               <option value="9">9</option>
+               <option value="15">15</option>
+               <option value="21">21</option>
+            </select>
+         </div>
+      `;
+
+      // Insert the dropdown HTML into the DOM after the header
+      const pageHeader = document.querySelector('.header');
+      pageHeader.insertAdjacentHTML('afterend', optionsHtml);
+
+      // Set the event listener for the dropdown
+      this.studentsPerPageSelect = document.getElementById('students-per-page');
+      this.studentsPerPageSelect.addEventListener('change', () => {
+         this.studentsPerPage = parseInt(this.studentsPerPageSelect.value);
+         this.showPage(1); // Reset to the first page after changing the value
+         this.addPagination();
+      });
    }
 
    // Render the list of students based on the current page

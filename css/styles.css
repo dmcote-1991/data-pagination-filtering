@@ -1,4 +1,3 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;800&display=swap');
 
 * {
@@ -23,8 +22,6 @@ ul {
   width: 95%;
 }
 
-
-
 header {
   text-align: center;
 	display: flex;
@@ -41,8 +38,6 @@ header h2 {
   letter-spacing: 2px;
 	margin-bottom: 25px;
 }
-
-
 
 .student-search {
   display: flex;
@@ -76,6 +71,22 @@ header h2 {
   width: 25px;
 }
 
+.pagination-options {
+  display: flex;
+  justify-content: right;
+  margin: 20px 0;
+}
+
+.pagination-options label {
+  margin-right: 10px;
+  font-size: 16px;
+  align-self: center;
+}
+
+.pagination-options select {
+  padding: 5px;
+  font-size: 16px;
+}
 
 
 .student-list {
@@ -140,8 +151,6 @@ header h2 {
   margin-top: 1.1em;
 }
 
-
-
 .pagination {
   margin: 30px 0 60px;
   text-align: center;
@@ -171,7 +180,6 @@ header h2 {
   color: #fff;
 }
 
-
 .student-search span {
   position: absolute;
   clip: rect(1px, 1px, 1px, 1px);
@@ -181,8 +189,6 @@ header h2 {
   width: 1px;
   overflow: hidden;
 }
-
-
 
 .no-results {
 	font-family: 'Nunito', sans-serif;
@@ -194,10 +200,7 @@ header h2 {
 	margin-bottom: 15px;
 }
 
-
-
 @media screen and (min-width: 700px) {
-
 	.page {
 		width: 70%;
 	}
