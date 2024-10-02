@@ -175,9 +175,15 @@ header h2 {
 	transition: 0.4s;
 }
 
-.pagination li button.active, .pagination li button:hover {
+.pagination li button.active, 
+.pagination li button:hover {
   background-color: #1e90ff;
   color: #fff;
+}
+
+.pagination li button.prev-btn, .pagination li button.next-btn {
+  font-size: 1em;
+  padding: 0.5em 1.2em;
 }
 
 .student-search span {

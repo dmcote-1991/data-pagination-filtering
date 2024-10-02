@@ -34,6 +34,7 @@ class StudentList {
       this.data = data.map(studentData => new Student(studentData));
       this.studentsPerPage = studentsPerPage;
       this.filteredData = this.data;
+      this.currentPage = 1;
       
       this.studentListElement = document.querySelector('.student-list');
       this.linkListElement = document.querySelector('.link-list');
@@ -81,29 +82,81 @@ class StudentList {
    // Add pagination buttons based on the filtered list
    addPagination() {
       const totalPages = Math.ceil(this.filteredData.length / this.studentsPerPage);
-
+   
+      // Clear existing pagination buttons
       this.linkListElement.innerHTML = '';
-
+   
+      // Prev Button
+      const prevButton = `<li><button class="prev-btn" type="button" disabled>&laquo; Prev</button></li>`;
+      this.linkListElement.insertAdjacentHTML('beforeend', prevButton);
+   
+      // Page Number Buttons
       for (let i = 1; i <= totalPages; i++) {
          const button = `<li><button type="button">${i}</button></li>`;
-
          this.linkListElement.insertAdjacentHTML('beforeend', button);
       }
-
-      this.linkListElement.querySelector('button').classList.add('active');
+   
+      // Next Button
+      const nextButton = `<li><button class="next-btn" type="button"${totalPages <= 1 ? 'disabled' : ''}>Next &raquo;</button></li>`;
+      this.linkListElement.insertAdjacentHTML('beforeend', nextButton);
+   
+      // Activate the current page button
+      const newActiveButton = Array.from(this.linkListElement.querySelectorAll('button'))
+         .find(button => button.textContent == this.currentPage);
+      if (newActiveButton) {
+         newActiveButton.classList.add('active');
+      }
+   
+      // Enable/Disable prev and next buttons based on the current page
+      this.linkListElement.querySelector('.prev-btn').disabled = this.currentPage === 1;
+      this.linkListElement.querySelector('.next-btn').disabled = this.currentPage === totalPages;
    }
 
    // Handle pagination button click event
    handlePagination() {
+      const totalPages = Math.ceil(this.filteredData.length / this.studentsPerPage);
+    
+      // Add event listener for the pagination buttons
       this.linkListElement.addEventListener('click', (e) => {
-         const clickedButton = e.target.closest('button');
-         const activeButton = this.linkListElement.querySelector('.active');
-
+        const clickedButton = e.target.closest('button');
+        
          if (clickedButton) {
-            activeButton.classList.remove('active');
-            clickedButton.classList.add('active');
-            
-            this.showPage(parseInt(clickedButton.innerHTML));
+            const activeButton = this.linkListElement.querySelector('.active');
+
+            if (clickedButton.classList.contains('prev-btn')) {
+                // Handle "Prev" button
+                if (this.currentPage > 1) {
+                    this.currentPage--;
+                }
+            } else if (clickedButton.classList.contains('next-btn')) {
+                // Handle "Next" button
+                if (this.currentPage < totalPages) {
+                    this.currentPage++;
+                }
+            } else if (!clickedButton.classList.contains('prev-btn') && !clickedButton.classList.contains('next-btn')) {
+                // Handle regular page number button clicks
+                this.currentPage = parseInt(clickedButton.innerHTML);
+            }
+
+            // Update active button
+            if (activeButton) {
+                activeButton.classList.remove('active');
+            }
+
+            // Set the active button based on the current page
+            const newActiveButton = Array.from(this.linkListElement.querySelectorAll('button'))
+            .find(button => button.textContent == this.currentPage);
+
+            if (newActiveButton) {
+                newActiveButton.classList.add('active');
+            }
+
+            // Show students for the current page
+            this.showPage(this.currentPage);
+
+            // Enable/Disable prev and next buttons based on the current page
+            this.linkListElement.querySelector('.prev-btn').disabled = this.currentPage === 1;
+            this.linkListElement.querySelector('.next-btn').disabled = this.currentPage === totalPages;
          }
       });
    }
