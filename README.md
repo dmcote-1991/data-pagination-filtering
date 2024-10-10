@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Student List Application is a web-based project that displays a list of students with their details. It features dynamic pagination, allowing users to select the number of students displayed per page and search for specific students by name. This application is built using HTML, CSS, and JavaScript.
+The Student List Application is a web-based project that displays a list of students with their details. It features dynamic pagination, allowing users to select the number of students displayed per page and search for specific students by name. This application is built using HTML, CSS, and TypeScript.
 
 ## Features
 
@@ -15,19 +15,23 @@ The Student List Application is a web-based project that displays a list of stud
 ### Prerequisites
 
 - A modern web browser (e.g., Chrome, Firefox, Safari).
-- Basic knowledge of HTML, CSS, and JavaScript (optional).
+- Basic knowledge of HTML, CSS, and TypeScript (optional).
 
 ### Installation
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/dmcote-1991/data-pagination-filtering.git
 
 2. Navigate to the project directory:
    ```bash
-   cd student-list
+   cd data-pagination-filtering
 
-3. Open `index.html` in your web browser.
+3. Compile the TypeScript files:
+   ``` bash
+   tsc
+
+4. Open `index.html` in your web browser.
 
 ### Usage
 
@@ -40,17 +44,21 @@ The Student List Application is a web-based project that displays a list of stud
 
 ```bash
 /student-list
-├── index.html       # Main HTML file
+├── index.html 
 ├── css
-│   ├── reset.css    # CSS reset styles
-│   └── styles.css    # Main CSS styles
+│   ├── reset.css 
+│   └── styles.css 
 ├── img
-│   └── icn-search.svg # Search icon image
-├── js
-│   ├── data.js      # Sample student data
-│   └── script.js    # Main JavaScript file
-├── README.md        # Project documentation
-└── .gitignore
+│   └── icn-search.svg  # Search icon image
+├── dist/  # Compiled JavaScript files 
+│  ├── data.js 
+│  └── script.js 
+├── ts
+│   ├── data.ts  # Sample student data
+│   └── script.ts 
+├── README.md 
+├── .gitignore
+└── tsconfig.json
 ```
 
 ## Contributing

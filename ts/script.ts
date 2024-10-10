@@ -1,16 +1,28 @@
+interface StudentData {
+   name: { title: string; first: string; last: string };
+   email: string;
+   registered: { date: string };
+   picture: { large: string; medium: string; thumbnail: string };
+}
+
 /**
 	*   Class representing a student
 */
 class Student {
-   constructor(data) {
+   name: { first: string; last: string };
+   email: string;
+   registered: string;
+   picture: { thumbnail: string };
+
+   constructor(data: StudentData) {
       this.name = data.name;
       this.email = data.email;
-      this.registered = data.registered;
+      this.registered = data.registered.date;
       this.picture = data.picture;
    }
 
    // Method to generate HTML for a student card
-   generateStudentHTML() {
+   generateStudentHTML(): string {
       return `
          <li class="student-item cf">
             <div class="student-details">
@@ -19,7 +31,7 @@ class Student {
                <span class="email">${this.email}</span>
             </div>
             <div class="joined-details">
-               <span class="date">Joined ${this.registered.date}</span>
+               <span class="date">Joined ${this.registered}</span>
             </div>
          </li>
       `;
@@ -30,20 +42,28 @@ class Student {
 	*   Class managing the list of students
 */
 class StudentList {
-   constructor(data, studentsPerPage = 9) {
+   data: Student[];
+   studentsPerPage: number;
+   filteredData: Student[];
+   currentPage: number;
+   studentListElement: HTMLElement;
+   linkListElement: HTMLElement;
+   studentsPerPageSelect!: HTMLSelectElement;
+
+   constructor(data: StudentData[], studentsPerPage: number = 9) {
       this.data = data.map(studentData => new Student(studentData));
       this.studentsPerPage = studentsPerPage;
       this.filteredData = this.data;
       this.currentPage = 1;
       
-      this.studentListElement = document.querySelector('.student-list');
-      this.linkListElement = document.querySelector('.link-list');
+      this.studentListElement = document.querySelector('.student-list') as HTMLElement;
+      this.linkListElement = document.querySelector('.link-list') as HTMLElement;
 
       this.renderPaginationOptions();
    }
 
    // Render the dropdown for students per page
-   renderPaginationOptions() {
+   renderPaginationOptions(): void {
       const optionsHtml = `
          <div class="pagination-options">
             <label for="students-per-page">Students per page:</label>
@@ -56,11 +76,11 @@ class StudentList {
       `;
 
       // Insert the dropdown HTML into the DOM after the header
-      const pageHeader = document.querySelector('.header');
+      const pageHeader = document.querySelector('.header')!;
       pageHeader.insertAdjacentHTML('afterend', optionsHtml);
 
       // Set the event listener for the dropdown
-      this.studentsPerPageSelect = document.getElementById('students-per-page');
+      this.studentsPerPageSelect = document.getElementById('students-per-page') as HTMLSelectElement;
       this.studentsPerPageSelect.addEventListener('change', () => {
          this.studentsPerPage = parseInt(this.studentsPerPageSelect.value);
          this.showPage(1); // Reset to the first page after changing the value
@@ -69,7 +89,7 @@ class StudentList {
    }
 
    // Render the list of students based on the current page
-   showPage(page = 1) {
+   showPage(page = 1): void {
       const start = (page * this.studentsPerPage) - this.studentsPerPage;
       const end = (page * this.studentsPerPage);
 
@@ -80,7 +100,7 @@ class StudentList {
    }
 
    // Add pagination buttons based on the filtered list
-   addPagination() {
+   addPagination(): void {
       const totalPages = Math.ceil(this.filteredData.length / this.studentsPerPage);
    
       // Clear existing pagination buttons
@@ -102,23 +122,23 @@ class StudentList {
    
       // Activate the current page button
       const newActiveButton = Array.from(this.linkListElement.querySelectorAll('button'))
-         .find(button => button.textContent == this.currentPage);
+         .find(button => button.textContent == this.currentPage.toString());
       if (newActiveButton) {
          newActiveButton.classList.add('active');
       }
    
       // Enable/Disable prev and next buttons based on the current page
-      this.linkListElement.querySelector('.prev-btn').disabled = this.currentPage === 1;
-      this.linkListElement.querySelector('.next-btn').disabled = this.currentPage === totalPages;
+      (this.linkListElement.querySelector('.prev-btn') as HTMLButtonElement)!.disabled = this.currentPage === 1;
+      (this.linkListElement.querySelector('.next-btn') as HTMLButtonElement)!.disabled = this.currentPage === totalPages;
    }
 
    // Handle pagination button click event
-   handlePagination() {
+   handlePagination(): void {
       const totalPages = Math.ceil(this.filteredData.length / this.studentsPerPage);
     
       // Add event listener for the pagination buttons
       this.linkListElement.addEventListener('click', (e) => {
-        const clickedButton = e.target.closest('button');
+        const clickedButton = (e.target as HTMLElement).closest('button') as HTMLButtonElement;
         
          if (clickedButton) {
             const activeButton = this.linkListElement.querySelector('.active');
@@ -145,7 +165,7 @@ class StudentList {
 
             // Set the active button based on the current page
             const newActiveButton = Array.from(this.linkListElement.querySelectorAll('button'))
-            .find(button => button.textContent == this.currentPage);
+            .find(button => button.textContent == this.currentPage.toString());
 
             if (newActiveButton) {
                 newActiveButton.classList.add('active');
@@ -155,14 +175,14 @@ class StudentList {
             this.showPage(this.currentPage);
 
             // Enable/Disable prev and next buttons based on the current page
-            this.linkListElement.querySelector('.prev-btn').disabled = this.currentPage === 1;
-            this.linkListElement.querySelector('.next-btn').disabled = this.currentPage === totalPages;
+            (this.linkListElement.querySelector('.prev-btn') as HTMLButtonElement)!.disabled = this.currentPage === 1;
+            (this.linkListElement.querySelector('.next-btn') as HTMLButtonElement)!.disabled = this.currentPage === totalPages;
          }
       });
    }
 
    // Filter students based on search input
-   filterStudents(keyword) {
+   filterStudents(keyword: string): void {
       this.filteredData = this.data.filter(student => {
          const studentName = `${student.name.first} ${student.name.last}`.toLowerCase();
 
@@ -178,15 +198,18 @@ class StudentList {
 	*   Class for the Seach Bar
 */
 class SearchBar {
-   constructor(studentList) {
+   studentList: StudentList;
+   inputElement: HTMLElement;
+
+   constructor(studentList: StudentList) {
       this.studentList = studentList;
       this.render();
-      this.inputElement = document.getElementById('search');
+      this.inputElement = document.getElementById('search') as HTMLInputElement;
       this.handleSearch();
    }
 
    // Render the search bar HTML
-   render() {
+   render(): void {
       const html = `
          <label for="search" class="student-search">
             <span>Search by name</span>
@@ -194,15 +217,15 @@ class SearchBar {
             <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
          </label>
       `;
-      const pageHeader = document.querySelector('.header');
+      const pageHeader = document.querySelector('.header')!;
 
       pageHeader.insertAdjacentHTML('beforeend', html);
    }
 
    // Handle the search functionality
-   handleSearch() {
+   handleSearch(): void {
       this.inputElement.addEventListener('keyup', () => {
-         const userInput = this.inputElement.value;
+         const userInput = (this.inputElement as HTMLInputElement).value;
          this.studentList.filterStudents(userInput);
       });
    }
