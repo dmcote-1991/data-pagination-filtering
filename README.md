@@ -49,13 +49,21 @@ The Student List Application is a web-based project that displays a list of stud
 │   ├── reset.css 
 │   └── styles.css 
 ├── img
-│   └── icn-search.svg  # Search icon image
+│   └── icn-search.svg
 ├── dist/  # Compiled JavaScript files 
-│  ├── data.js 
-│  └── script.js 
+│  ├── app.js 
+│  ├── SearchBar.js 
+│  ├── Student.js 
+│  ├── StudentData.js 
+│  └── StudentList.js 
 ├── ts
-│   ├── data.ts  # Sample student data
-│   └── script.ts 
+│   ├── app.ts
+│   ├── SearchBar.ts
+│   ├── Student.ts
+│   ├── StudentData.ts
+│   └── StudentList.ts 
+├── package-lock.json
+├── package.json
 ├── README.md 
 ├── .gitignore
 └── tsconfig.json
