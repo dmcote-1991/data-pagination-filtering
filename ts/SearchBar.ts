@@ -5,7 +5,7 @@ import { StudentList } from './StudentList.js';
 */
 export class SearchBar {
   studentList: StudentList;
-  inputElement: HTMLElement;
+  inputElement: HTMLInputElement;
 
   constructor(studentList: StudentList) {
      this.studentList = studentList;
@@ -16,22 +16,32 @@ export class SearchBar {
 
   // Render the search bar HTML
   render(): void {
-     const html = `
-        <label for="search" class="student-search">
-           <span>Search by name</span>
-           <input id="search" placeholder="Search by name...">
-           <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
-        </label>
-     `;
-     const pageHeader = document.querySelector('.header')!;
-     pageHeader.insertAdjacentHTML('beforeend', html);
+    const html = `
+      <label for="search" class="student-search">
+         <span>Search by name</span>
+         <input id="search" placeholder="Search by name...">
+         <button type="button"><img src="img/icn-search.svg" alt="Search icon"></button>
+      </label>
+    `;
+    const pageHeader = document.querySelector('.header')!;
+    pageHeader.insertAdjacentHTML('beforeend', html);
   }
 
-  // Handle the search functionality
+  // Handle the search functionality with debouncing
   handleSearch(): void {
-     this.inputElement.addEventListener('keyup', () => {
-        const userInput = (this.inputElement as HTMLInputElement).value;
-        this.studentList.filterStudents(userInput);
-     });
+    const debounce = (func: Function, delay: number) => {
+      let timeoutId: number;
+      return (...args: any[]) => {
+         clearTimeout(timeoutId);
+         timeoutId = window.setTimeout(() => func(...args), delay);
+      };
+    };
+
+    const onSearch = debounce(() => {
+      const userInput = this.inputElement.value;
+      this.studentList.filterStudents(userInput);
+    }, 300);
+
+    this.inputElement.addEventListener('keyup', onSearch);
   }
 }
