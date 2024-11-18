@@ -56,7 +56,7 @@ The Student List Application is a web-based project that displays a list of stud
 │  ├── Student.js 
 │  ├── StudentData.js 
 │  └── StudentList.js 
-├── ts
+├── src
 │   ├── app.ts
 │   ├── SearchBar.ts
 │   ├── Student.ts
