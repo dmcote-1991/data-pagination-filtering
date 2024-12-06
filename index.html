@@ -9,16 +9,27 @@
   </head>
 
   <body>
+    <!-- Skip link for keyboard navigation -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
     <div class="page">
       <header class="header">
-        <h2>Students</h2>
+        <h1>Students</h1>
       </header>
 
-      <ul class="student-list"></ul>
+      <!-- Main content section -->
+      <main id="main-content">
+        <ul class="student-list" aria-live="polite" aria-label="List of students">
+          <!-- Student items will be dynamically populated -->
+        </ul>
+      </main>
 
-      <div class="pagination">
-        <ul class="link-list"></ul>
-      </div>
+      <!-- Pagination section -->
+      <nav class="pagination" aria-label="Pagination navigation">
+        <ul class="link-list">
+          <!-- Pagination links will be dynamically populated -->
+        </ul>
+      </nav>
     </div>
 
     <script type="module" src="dist/app.js"></script>
