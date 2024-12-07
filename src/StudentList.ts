@@ -45,7 +45,9 @@ export class StudentList {
      this.studentsPerPageSelect = document.getElementById('students-per-page') as HTMLSelectElement;
      this.studentsPerPageSelect.addEventListener('change', () => {
         this.studentsPerPage = parseInt(this.studentsPerPageSelect.value); // Update the students per page value
-        this.showPage(this.currentPage); // Redisplay the current page
+        this.showPage(1); // Redisplay the current page
+        this.addPagination(); // Update Pagination controls
+        this.handlePagination(); // Rebind the pagination button event listeners
      });
   }
 
@@ -67,84 +69,98 @@ export class StudentList {
 
   /* Add pagination buttons based on the filtered list */
   addPagination(): void {
-     const totalPages = Math.ceil(this.filteredData.length / this.studentsPerPage);
+   const totalPages = Math.ceil(this.filteredData.length / this.studentsPerPage);
   
-     // Clear existing pagination buttons
-     this.linkListElement.innerHTML = '';
+   // Clear existing pagination buttons
+   this.linkListElement.innerHTML = '';
   
-     // Prev Button
-     const prevButton = `<li><button class="prev-btn" type="button" disabled>&laquo; Prev</button></li>`;
-     this.linkListElement.insertAdjacentHTML('beforeend', prevButton);
+   // Prev Button
+   const prevButton = `<li><button class="prev-btn" type="button" disabled>&laquo; Prev</button></li>`;
+   this.linkListElement.insertAdjacentHTML('beforeend', prevButton);
   
-     // Page Number Buttons
-     for (let i = 1; i <= totalPages; i++) {
-        const button = `<li><button type="button">${i}</button></li>`;
-        this.linkListElement.insertAdjacentHTML('beforeend', button);
-     }
+   // Page Number Buttons
+   for (let i = 1; i <= totalPages; i++) {
+      const button = `<li><button type="button">${i}</button></li>`;
+      this.linkListElement.insertAdjacentHTML('beforeend', button);
+   }
   
-     // Next Button
-     const nextButton = `<li><button class="next-btn" type="button"${totalPages <= 1 ? 'disabled' : ''}>Next &raquo;</button></li>`;
-     this.linkListElement.insertAdjacentHTML('beforeend', nextButton);
+   // Next Button
+   const nextButton = `<li><button class="next-btn" type="button" ${totalPages <= this.currentPage ? 'disabled' : ''}>Next &raquo;</button></li>`;
+   this.linkListElement.insertAdjacentHTML('beforeend', nextButton);
   
-     // Activate the current page button
-     const newActiveButton = Array.from(this.linkListElement.querySelectorAll('button'))
-        .find(button => button.textContent == this.currentPage.toString());
-     if (newActiveButton) {
-        newActiveButton.classList.add('active');
-     }
+   // Activate the current page button
+   const newActiveButton = Array.from(this.linkListElement.querySelectorAll('button'))
+      .find(button => button.textContent == this.currentPage.toString());
+   if (newActiveButton) {
+      newActiveButton.classList.add('active');
+   }
   
-     // Enable/Disable prev and next buttons based on the current page
-     (this.linkListElement.querySelector('.prev-btn') as HTMLButtonElement)!.disabled = this.currentPage === 1;
-     (this.linkListElement.querySelector('.next-btn') as HTMLButtonElement)!.disabled = this.currentPage === totalPages;
+   // Enable/Disable prev and next buttons based on the current page
+   const prevButtonEl = this.linkListElement.querySelector('.prev-btn') as HTMLButtonElement;
+   const nextButtonEl = this.linkListElement.querySelector('.next-btn') as HTMLButtonElement;
+
+   prevButtonEl.disabled = this.currentPage === 1;
+   nextButtonEl.disabled = this.currentPage === totalPages || this.filteredData.length === 0;
   }
 
   /* Handle pagination button click event */
   handlePagination(): void {
-     const totalPages = Math.ceil(this.filteredData.length / this.studentsPerPage);
-   
-     // Add event listener for the pagination buttons
-     this.linkListElement.addEventListener('click', (e) => {
-       const clickedButton = (e.target as HTMLElement).closest('button') as HTMLButtonElement;
-       
-        if (clickedButton) {
-           const activeButton = this.linkListElement.querySelector('.active');
+   const totalPages = Math.ceil(this.filteredData.length / this.studentsPerPage);
 
-           if (clickedButton.classList.contains('prev-btn')) {
-               // Handle "Prev" button
-               if (this.currentPage > 1) {
-                   this.currentPage--;
-               }
-           } else if (clickedButton.classList.contains('next-btn')) {
-               // Handle "Next" button
-               if (this.currentPage < totalPages) {
-                   this.currentPage++;
-               }
-           } else if (!clickedButton.classList.contains('prev-btn') && !clickedButton.classList.contains('next-btn')) {
-               // Handle regular page number button clicks
-               this.currentPage = parseInt(clickedButton.innerHTML);
-           }
+   // Remove the previous event listener to avoid multiple listeners
+   this.linkListElement.removeEventListener('click', this.paginationEventListener);
 
-           // Update active button
-           if (activeButton) {
-               activeButton.classList.remove('active');
-           }
+   // Add event listener for the pagination buttons
+   this.linkListElement.addEventListener('click', this.paginationEventListener);
+  }
 
-           // Set the active button based on the current page
-           const newActiveButton = Array.from(this.linkListElement.querySelectorAll('button'))
-           .find(button => button.textContent == this.currentPage.toString());
+  // Store the event listener function as a class method
+  paginationEventListener = (e: Event) => {
+   const totalPages = Math.ceil(this.filteredData.length / this.studentsPerPage);
+   const clickedButton = (e.target as HTMLElement).closest('button') as HTMLButtonElement;
 
-           if (newActiveButton) {
-               newActiveButton.classList.add('active');
-           }
+   if (clickedButton) {
+      const activeButton = this.linkListElement.querySelector('.active');
 
-           // Show students for the current page
-           this.showPage(this.currentPage);
+      if (clickedButton.classList.contains('prev-btn')) {
+          // Handle "Prev" button
+          if (this.currentPage > 1) {
+              this.currentPage--; // Go to previous page
+          }
+      } else if (clickedButton.classList.contains('next-btn')) {
+          // Handle "Next" button
+          if (this.currentPage < totalPages) {
+              this.currentPage++; // Go to next page
+          }
+      } else if (!clickedButton.classList.contains('prev-btn') && !clickedButton.classList.contains('next-btn')) {
+          // Handle regular page number button clicks
+          this.currentPage = parseInt(clickedButton.innerHTML);
+      }
 
-           // Enable/Disable prev and next buttons based on the current page
-           (this.linkListElement.querySelector('.prev-btn') as HTMLButtonElement)!.disabled = this.currentPage === 1;
-           (this.linkListElement.querySelector('.next-btn') as HTMLButtonElement)!.disabled = this.currentPage === totalPages;
-        }
-     });
+      // Update active button
+      if (activeButton) {
+          activeButton.classList.remove('active');
+      }
+
+      // Set the active button based on the current page
+      const newActiveButton = Array.from(this.linkListElement.querySelectorAll('button'))
+      .find(button => button.textContent == this.currentPage.toString());
+
+      if (newActiveButton) {
+          newActiveButton.classList.add('active');
+      }
+
+      // Show students for the current page
+      this.showPage(this.currentPage);
+      this.addPagination();
+
+      // Enable/Disable prev and next buttons based on the current page
+      const prevButtonEl = this.linkListElement.querySelector('.prev-btn') as HTMLButtonElement;
+      const nextButtonEl = this.linkListElement.querySelector('.next-btn') as HTMLButtonElement;
+
+      prevButtonEl.disabled = this.currentPage === 1;
+      nextButtonEl.disabled = this.currentPage === totalPages || this.filteredData.length === 0;
+   }
   }
 
   /* Filter students based on search input */
